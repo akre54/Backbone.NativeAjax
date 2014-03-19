@@ -28,5 +28,5 @@ Notes:
 
 
 Uses code from [Exoskeleton](https://github.com/paulmillr/exoskeleton). See that
-project for more
+project for more information and other features.
 
