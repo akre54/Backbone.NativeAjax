@@ -1,0 +1,29 @@
+{
+  "name": "backbone.nativeajax",
+  "version": "0.1.0",
+  "author": "Adam Krebs <amk528@cs.nyu.edu>",
+  "description": "A Backbone.Ajax function powered by native XHR methods",
+  "licence": "MIT",
+  "main": "backbone.nativeajax",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/akre54/backbone.nativeajax"
+  },
+  "dependencies": {
+    "underscore": "*"
+  },
+  "peerDependencies": {
+    "backbone": "*"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "chai": "*",
+  },
+  "engines": {
+    "node": "*",
+    "npm": "*"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha"
+  }
+}
