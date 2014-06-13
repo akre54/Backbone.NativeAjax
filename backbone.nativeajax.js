@@ -104,7 +104,6 @@
           xhrAccepts["*"]
       );
 
-      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
       if (options.headers) for (var key in options.headers) {
         xhr.setRequestHeader(key, options.headers[key]);
       }
