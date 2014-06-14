@@ -18,15 +18,16 @@ Features:
 
 Requirements:
 -------------
-NativeAjax makes use of XMLHttpRequest which is supported in most modern browsers.
+NativeAjax makes use of XMLHttpRequest which is supported in modern browsers.
 See the [compatibility chart](http://caniuse.com/#search=XMLHttpRequest)
 
 Notes:
 ------
 * The ajax function accepts a `success` and `error` callbacks. To return
   a deferred object, set `Backbone.Deferred`.
-
+* Unlike jQuery, we don't automatically set the `X-Requested-With` header, so
+  things like Rails' `request.xhr?` will break. If you need it, you can pass it
+  in yourself.
 
 Uses code from [Exoskeleton](https://github.com/paulmillr/exoskeleton). See that
 project for more information and other features.
-
