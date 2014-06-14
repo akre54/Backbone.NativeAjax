@@ -1,6 +1,6 @@
 {
   "name": "backbone.nativeajax",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "https://github.com/akre54/backbone.nativeajax",
   "author": "Adam Krebs <amk528@cs.nyu.edu>",
   "description": "A Backbone.Ajax function powered by native XHR methods",
@@ -12,9 +12,6 @@
     "native",
     "xhr"
   ],
-  "dependencies": {
-    "underscore": "*"
-  },
   "peerDependencies": {
     "backbone": "*"
   },
