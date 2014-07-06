@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "chai": "*",
+    "chai": "*"
   },
   "engines": {
     "node": "*",
