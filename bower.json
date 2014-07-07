@@ -12,8 +12,5 @@
     "native",
     "xhr"
   ],
-  "peerDependencies": {
-    "backbone": "*"
-  },
   "license": "MIT"
 }
