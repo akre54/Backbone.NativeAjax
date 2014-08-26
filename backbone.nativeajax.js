@@ -23,7 +23,7 @@
       if (accepts == null) accepts = xhr.getResponseHeader('content-type');
       if (xmlRe.test(accepts)) {
         return xhr.responseXML;
-      } else if (jsonRe.test(accepts)) {
+      } else if (jsonRe.test(accepts) && xhr.responseText !== '') {
         return JSON.parse(xhr.responseText);
       } else {
         return xhr.responseText;
