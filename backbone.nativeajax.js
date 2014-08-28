@@ -115,6 +115,6 @@
 
       return promise;
     };
-    return ajax;
   })();
+  return ajax;
 }));
