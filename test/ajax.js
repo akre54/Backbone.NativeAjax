@@ -1,8 +1,12 @@
 var expect = require('chai').expect,
-    sinon = require('sinon'),
-    ajax = require('../');
+    sinon = require('sinon');
 
-var xhr = sinon.useFakeXMLHttpRequest();
+var root = typeof window != 'undefined' ? window : global;
+
+root.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var ajax = require('../backbone.nativeajax');
+
+// var xhr = sinon.useFakeXMLHttpRequest();
 
 describe('Backbone.NativeAjax', function() {
 
@@ -31,9 +35,23 @@ describe('Backbone.NativeAjax', function() {
       reject = sinon.stub();
     });
 
-    it('should respect a global Promise constructor if one set');
+    afterEach(function() {
+      delete global.Promise;
+      delete ajax.Promise;
+    });
 
-    it('should prefer Backbone.ajax.Promise over global');
+    it('should respect a global Promise constructor if one set', function() {
+      global.Promise = Promise;
+      expect(ajax({url: 'http://localhost.com'})).to.be.an.instanceof(Promise);
+    });
+
+    it('should prefer Backbone.ajax.Promise over global', function() {
+      global.Promise = function() {};
+      ajax.Promise = Promise;
+      var req = ajax({url: 'http://localhost.com'});
+      expect(req).to.be.an.instanceof(Promise);
+      expect(req).not.to.be.an.instanceof(global.Promise);
+    });
 
     it('should resolve the deferred on complete');
     it('should reject the deferred on error');

@@ -14,13 +14,14 @@
     "npm": "*"
   },
   "scripts": {
-    "test": "phantomjs test/vendor/runner.js test/index.html?noglobals=true"
+    "test": "mocha"
   },
   "devDependencies": {
     "backbone": "git://github.com/jashkenas/backbone#cbaa8d144b7560d2b509c1ffbaf6ddb1e3829e6c",
     "chai": "^1.9.1",
     "mocha": "^1.21.4",
     "sinon": "^1.10.3",
-    "underscore": "^1.6.0"
+    "underscore": "^1.6.0",
+    "xmlhttprequest": "^1.6.0"
   }
 }

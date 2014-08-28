@@ -60,8 +60,8 @@
       if (options.type == null) options.type = 'GET';
 
       var resolve, reject, xhr = new XMLHttpRequest();
-      var Promise = ajax.Promise || (typeof Promise !== null && Promise);
-      var promise = Promise && new Promise(function(res, rej) {
+      var PromiseFn = ajax.Promise || (typeof Promise !== null && Promise);
+      var promise = PromiseFn && new PromiseFn(function(res, rej) {
         resolve = res;
         reject = rej;
       });
