@@ -36,7 +36,7 @@
         (xhr.status === 0 && window.location.protocol === 'file:')
     };
 
-    var end = function(xhr, options, promise, resolve, reject) {
+    var end = function(xhr, options, resolve, reject) {
       return function() {
         if (xhr.readyState !== 4) return;
 
@@ -46,11 +46,11 @@
         // Check for validity.
         if (isValid(xhr)) {
           if (options.success) options.success(data);
-          if (promise) resolve(data);
+          if (resolve) resolve(data);
         } else {
           var error = new Error('Server responded with a status of ' + status);
           if (options.error) options.error(xhr, status, error);
-          if (promise) reject(xhr);
+          if (reject) reject(xhr);
         }
       }
     };
@@ -59,7 +59,7 @@
       if (options == null) throw new Error('You must provide options');
       if (options.type == null) options.type = 'GET';
 
-      var xhr = new XMLHttpRequest(), resolve, reject;
+      var resolve, reject, xhr = new XMLHttpRequest();
       var Promise = ajax.Promise || (typeof Promise !== null && Promise);
       var promise = Promise && new Promise(function(res, rej) {
         resolve = res;
@@ -89,8 +89,7 @@
         }
       }
 
-      if (options.credentials) options.withCredentials = true;
-      xhr.addEventListener('readystatechange', end(xhr, options, promise, resolve, reject));
+      xhr.addEventListener('readystatechange', end(xhr, options, resolve, reject));
       xhr.open(options.type, options.url, true);
 
       var allTypes = "*/".concat("*");

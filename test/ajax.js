@@ -1,17 +1,14 @@
 var expect = require('chai').expect,
     sinon = require('sinon'),
-    NativeAjax = require('../');
+    ajax = require('../');
 
 var xhr = sinon.useFakeXMLHttpRequest();
 
 describe('Backbone.NativeAjax', function() {
-  describe('setup', function() {
-    it('should export itself as Backbone.ajax');
-  });
 
   describe('creating a request', function() {
     it('should throw when no options object is passed');
-
+    it('should stringify GET data when present');
   });
 
   describe('headers', function() {
@@ -24,8 +21,19 @@ describe('Backbone.NativeAjax', function() {
     it('should invoke the error callback on error');
   });
 
-  describe('Backbone.Deferred', function() {
-    it('should respect a Deferred property if one set');
+  describe('Promise', function() {
+    var Promise, resolve, reject;
+    beforeEach(function() {
+      Promise = function(cb) {
+        cb(resolve, reject);
+      };
+      resolve = sinon.stub();
+      reject = sinon.stub();
+    });
+
+    it('should respect a global Promise constructor if one set');
+
+    it('should prefer Backbone.ajax.Promise over global');
 
     it('should resolve the deferred on complete');
     it('should reject the deferred on error');
