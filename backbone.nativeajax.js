@@ -7,15 +7,15 @@
 //     https://github.com/akre54/Backbone.NativeAjax
 
 (function (factory) {
-  if (typeof define === 'function' && define.amd) { define(['backbone'], factory);
-  } else if (typeof exports === 'object') { factory(require('backbone'));
-  } else { factory(Backbone); }
-}(function (Backbone) {
+  if (typeof define === 'function' && define.amd) { define(factory);
+  } else if (typeof exports === 'object') { module.exports = factory();
+  } else { Backbone.ajax = factory(); }
+}(function() {
   // Make an AJAX request to the server.
   // Usage:
   //   var req = Backbone.ajax({url: 'url', type: 'PATCH', data: 'data'});
-  //   req.done(...).error(...) // if Backbone.Deferred is set
-  Backbone.ajax = (function() {
+  //   req.then(..., ...) // if Promise is set
+  var ajax = (function() {
     var xmlRe = /^(?:application|text)\/xml/;
     var jsonRe = /^application\/json/;
 
@@ -36,7 +36,7 @@
         (xhr.status === 0 && window.location.protocol === 'file:')
     };
 
-    var end = function(xhr, options, deferred) {
+    var end = function(xhr, options, promise, resolve, reject) {
       return function() {
         if (xhr.readyState !== 4) return;
 
@@ -46,11 +46,11 @@
         // Check for validity.
         if (isValid(xhr)) {
           if (options.success) options.success(data);
-          if (deferred) deferred.resolve(data);
+          if (promise) resolve(data);
         } else {
           var error = new Error('Server responded with a status of ' + status);
           if (options.error) options.error(xhr, status, error);
-          if (deferred) deferred.reject(xhr);
+          if (promise) reject(xhr);
         }
       }
     };
@@ -59,8 +59,12 @@
       if (options == null) throw new Error('You must provide options');
       if (options.type == null) options.type = 'GET';
 
-      var xhr = new XMLHttpRequest();
-      var deferred = Backbone.Deferred && Backbone.Deferred();
+      var xhr = new XMLHttpRequest(), resolve, reject;
+      var Promise = ajax.Promise || (typeof Promise !== null && Promise);
+      var promise = Promise && new Promise(function(res, rej) {
+        resolve = res;
+        reject = rej;
+      });
 
       if (options.contentType) {
         if (options.headers == null) options.headers = {};
@@ -86,7 +90,7 @@
       }
 
       if (options.credentials) options.withCredentials = true;
-      xhr.addEventListener('readystatechange', end(xhr, options, deferred));
+      xhr.addEventListener('readystatechange', end(xhr, options, promise, resolve, reject));
       xhr.open(options.type, options.url, true);
 
       var allTypes = "*/".concat("*");
@@ -110,7 +114,8 @@
       if (options.beforeSend) options.beforeSend(xhr);
       xhr.send(options.data);
 
-      return deferred ? deferred.promise : undefined;
+      return promise;
     };
+    return ajax;
   })();
 }));

@@ -25,9 +25,7 @@ describe('Backbone.NativeAjax', function() {
   });
 
   describe('Backbone.Deferred', function() {
-    it('should respect a Deferred property if one set', function() {
-
-    });
+    it('should respect a Deferred property if one set');
 
     it('should resolve the deferred on complete');
     it('should reject the deferred on error');
