@@ -3,15 +3,18 @@ var expect = require('chai').expect,
 
 var root = typeof window != 'undefined' ? window : global;
 
-root.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+root.XMLHttpRequest = sinon.spy(require("xmlhttprequest").XMLHttpRequest);
 var ajax = require('../backbone.nativeajax');
-
-// var xhr = sinon.useFakeXMLHttpRequest();
 
 describe('Backbone.NativeAjax', function() {
 
   describe('creating a request', function() {
-    it('should throw when no options object is passed');
+    it('should throw when no options object is passed', function() {
+      expect(ajax).to.throw(Error, /You must provide options/);
+    });
+    it('should pass the url to XHR', function() {
+
+    });
     it('should stringify GET data when present');
   });
 
