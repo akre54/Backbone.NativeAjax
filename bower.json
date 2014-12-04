@@ -1,6 +1,6 @@
 {
   "name": "backbone.nativeajax",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "homepage": "https://github.com/akre54/backbone.nativeajax",
   "author": "Adam Krebs <amk528@cs.nyu.edu>",
   "description": "A Backbone.Ajax function powered by native XHR methods",
