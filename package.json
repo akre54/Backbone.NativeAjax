@@ -14,7 +14,11 @@
     "npm": "*"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "release": "npm run release-patch",
+    "release-patch": "git checkout master && npm version patch -m 'Backbone.NativeAjax %s' && git push origin master --tags && npm publish",
+    "release-minor": "git checkout master && npm version minor -m 'Backbone.NativeAjax %s' && git push origin master --tags && npm publish",
+    "release-major": "git checkout master && npm version major -m 'Backbone.NativeAjax %s' && git push origin master --tags && npm publish"
   },
   "devDependencies": {
     "backbone": "git://github.com/jashkenas/backbone#cbaa8d144b7560d2b509c1ffbaf6ddb1e3829e6c",
