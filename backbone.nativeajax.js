@@ -1,4 +1,4 @@
-// Backbone.NativeAjax.js 0.3.1
+// Backbone.NativeAjax.js 0.3.2
 // ---------------
 
 //     (c) 2014 Adam Krebs, Paul Miller, Exoskeleton Project
