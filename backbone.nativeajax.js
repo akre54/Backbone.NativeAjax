@@ -89,7 +89,7 @@
         }
       }
 
-      xhr.addEventListener('readystatechange', end(xhr, options, resolve, reject));
+      xhr.onreadystatechange = end(xhr, options, resolve, reject);
       xhr.open(options.type, options.url, true);
 
       var allTypes = "*/".concat("*");
