@@ -4,6 +4,10 @@ Backbone.NativeAjax
 A drop-in replacement for Backbone.Ajax that uses only native XMLHttpRequest
 methods for sync. It has no dependency on jQuery.
 
+You might consider using the [window.fetch pollyfill](https://github.com/github/fetch)
+coupled with [a simple plugin for Backbone](https://gist.github.com/akre54/9891fc85ff46afd85814)
+instead of this project if you need better Promise or header support.
+
 To Use:
 -------
 Load Backbone.NativeAjax with your favorite module loader or add as a script
