@@ -8,4 +8,4 @@ deploy:
   email: amk528@cs.nyu.edu
   provider: npm
 notifications:
-  email: false
+  email: true
