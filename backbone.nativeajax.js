@@ -113,6 +113,21 @@
       if (options.beforeSend) options.beforeSend(xhr);
       xhr.send(options.data);
 
+      options.originalXhr = xhr;
+
+      if (!promise) return xhr;
+
+      var props = ['readyState', 'status', 'statusText', 'responseText',
+        'responseXML', 'setRequestHeader', 'getAllResponseHeaders',
+        'getResponseHeader', 'statusCode', 'abort'];
+
+      for (var i = 0; i < props.length; i++) {
+        var prop = props[i];
+        promise[prop] = typeof xhr[prop] === 'function' ?
+                              xhr[prop].bind(xhr) :
+                              xhr[prop];
+      }
+
       return promise;
     };
   })();
