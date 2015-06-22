@@ -37,18 +37,8 @@ Requirements:
 NativeAjax uses XMLHttpRequest which is supported in modern browsers.
 See the [compatibility chart](http://caniuse.com/#search=XMLHttpRequest).
 
-It also uses `Function.prototype.bind` which can be easily pollyfilled in older
-environments.
-
-```js
-var slice = [].slice;
-Function.prototype.bind || Function.prototype.bind = function(ctx) {
-  var fn = this, args = slice.call(arguments, 1);
-  return function() {
-    return fn.apply(ctx, args.concat(slice.call(arguments)));
-  }
-};
-```
+It also makes use of `Function.prototype.bind` which can be easily pollyfilled
+in older environments.
 
 Set a `Promise` object on the global or on `Backbone.ajax` to return a promise.
 

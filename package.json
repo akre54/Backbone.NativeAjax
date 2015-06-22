@@ -3,7 +3,7 @@
   "version": "0.3.2",
   "author": "Adam Krebs <amk528@cs.nyu.edu>",
   "description": "A Backbone.Ajax function powered by native XHR methods",
-  "licence": "MIT",
+  "license": "MIT",
   "main": "backbone.nativeajax",
   "repository": {
     "type": "git",
@@ -14,18 +14,29 @@
     "npm": "*"
   },
   "scripts": {
-    "test": "mocha",
+    "test": "karma start",
     "release": "npm run release-patch",
     "release-patch": "git checkout master && npm version patch -m 'Backbone.NativeAjax %s' && git push origin master --tags && npm publish",
     "release-minor": "git checkout master && npm version minor -m 'Backbone.NativeAjax %s' && git push origin master --tags && npm publish",
     "release-major": "git checkout master && npm version major -m 'Backbone.NativeAjax %s' && git push origin master --tags && npm publish"
   },
   "devDependencies": {
-    "backbone": "git://github.com/jashkenas/backbone#cbaa8d144b7560d2b509c1ffbaf6ddb1e3829e6c",
-    "chai": "^1.9.1",
-    "mocha": "^1.21.4",
-    "sinon": "^1.10.3",
-    "underscore": "^1.6.0",
-    "xmlhttprequest": "^1.6.0"
+    "backbone": "1.2.1",
+    "chai": "^3.0.0",
+    "karma": "^0.12.36",
+    "karma-chrome-launcher": "^0.1.12",
+    "karma-cli": "0.0.4",
+    "karma-firefox-launcher": "^0.1.6",
+    "karma-junit-reporter": "^0.2.2",
+    "karma-mocha": "^0.1.10",
+    "karma-sourcemap-loader": "^0.3.5",
+    "karma-webpack": "^1.5.1",
+    "mocha": "^2.2.5",
+    "mocha-loader": "^0.7.1",
+    "mock-xhr": "^0.1.0",
+    "sinon": "git://github.com/cjohansen/Sinon.JS#b672042043517b9f84e14ed0fb8265126168778a",
+    "sinon-chai": "^2.8.0",
+    "webpack": "^1.9.11",
+    "webpack-dev-server": "^1.9.0"
   }
 }
