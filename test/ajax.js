@@ -12,7 +12,7 @@ var XMLHttpRequest = root.XMLHttpRequest = require("mock-xhr").request;
 var open = sinon.spy(XMLHttpRequest.prototype, 'open');
 var setRequestHeader = sinon.spy(XMLHttpRequest.prototype, 'setRequestHeader');
 
-var ajax = require('../backbone.nativeajax');
+var ajax = require('..');
 
 describe('Backbone.NativeAjax', function() {
 
@@ -59,8 +59,33 @@ describe('Backbone.NativeAjax', function() {
   });
 
   describe('finishing a request', function() {
-    it('should invoke the success callback on complete');
-    it('should invoke the error callback on error');
+    it('should invoke the success callback on complete', function() {
+      var success = sinon.mock(), error = sinon.mock();
+
+      var options = {url: 'test', success: success, error: error};
+      var req = ajax(options);
+      var xhr = options.originalXhr;
+
+      xhr.receive(200, {id: 1});
+
+      expect(success).to.have.been.calledOnce;
+      expect(success).to.have.been.calledWithExactly({id: 1});
+      expect(error).not.to.have.been.called;
+    });
+
+    it('should invoke the error callback on error', function() {
+      var success = sinon.mock(), error = sinon.mock();
+
+      var options = {url: 'test', success: success, error: error};
+      var req = ajax(options);
+      var xhr = options.originalXhr;
+
+      xhr.err();
+
+      expect(error).to.have.been.calledOnce;
+      expect(error).to.have.been.calledWithExactly(xhr, 0, sinon.match.instanceOf(Error));
+      expect(success).not.to.have.been.called;
+    });
   });
 
   describe('Promise', function() {
@@ -86,7 +111,7 @@ describe('Backbone.NativeAjax', function() {
     it('should prefer Backbone.ajax.Promise over global', function() {
       root.Promise = function() {};
       ajax.Promise = Promise;
-      var req = ajax({url: 'http://localhost.com'});
+      var req = ajax({url: 'test'});
       expect(req).to.be.an.instanceof(Promise);
       expect(req).not.to.be.an.instanceof(root.Promise);
     });
@@ -123,11 +148,11 @@ describe('Backbone.NativeAjax', function() {
 
   describe('XHR', function() {
 
-    var xhr, originalXhr;
+    var req, xhr;
     beforeEach(function() {
       var options = {url: 'test'};
-      xhr = ajax(options);
-      originalXhr = options.originalXhr;
+      req = ajax(options);
+      xhr = options.originalXhr;
     });
 
     it('should expose common XHR methods and properties', function() {
@@ -143,13 +168,13 @@ describe('Backbone.NativeAjax', function() {
       });
 
       it('should update XHR methods and properties onreadystatechange', function(done) {
-        expect(xhr.status).to.equal(0);
-        expect(xhr.status).to.equal(originalXhr.status);
+        expect(req.status).to.equal(0);
+        expect(req.status).to.equal(xhr.status);
 
-        originalXhr.receive(200, {id: 1});
+        xhr.receive(200, {id: 1});
 
-        expect(xhr.status).to.equal(200);
-        expect(xhr.status).to.equal(originalXhr.status);
+        expect(req.status).to.equal(200);
+        expect(req.status).to.equal(xhr.status);
       });
     });
   });
