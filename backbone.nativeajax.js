@@ -36,8 +36,10 @@
         (xhr.status === 0 && window.location.protocol === 'file:')
     };
 
-    var end = function(xhr, options, resolve, reject) {
+    var end = function(xhr, options, promise, resolve, reject) {
       return function() {
+        updatePromise(xhr, promise);
+
         if (xhr.readyState !== 4) return;
 
         var status = xhr.status;
@@ -54,6 +56,22 @@
         }
       }
     };
+
+    var updatePromise = function(xhr, promise) {
+      if (!promise) return;
+
+      var props = ['readyState', 'status', 'statusText', 'responseText',
+        'responseXML', 'setRequestHeader', 'getAllResponseHeaders',
+        'getResponseHeader', 'statusCode', 'abort'];
+
+      for (var i = 0; i < props.length; i++) {
+        var prop = props[i];
+        promise[prop] = typeof xhr[prop] === 'function' ?
+                              xhr[prop].bind(xhr) :
+                              xhr[prop];
+      }
+      return promise;
+    }
 
     return function(options) {
       if (options == null) throw new Error('You must provide options');
@@ -89,7 +107,7 @@
         }
       }
 
-      xhr.onreadystatechange = end(xhr, options, resolve, reject);
+      xhr.onreadystatechange = end(xhr, options, promise, resolve, reject);
       xhr.open(options.type, options.url, true);
 
       var allTypes = "*/".concat("*");
@@ -115,20 +133,9 @@
 
       options.originalXhr = xhr;
 
-      if (!promise) return xhr;
+      updatePromise(xhr, promise);
 
-      var props = ['readyState', 'status', 'statusText', 'responseText',
-        'responseXML', 'setRequestHeader', 'getAllResponseHeaders',
-        'getResponseHeader', 'statusCode', 'abort'];
-
-      for (var i = 0; i < props.length; i++) {
-        var prop = props[i];
-        promise[prop] = typeof xhr[prop] === 'function' ?
-                              xhr[prop].bind(xhr) :
-                              xhr[prop];
-      }
-
-      return promise;
+      return promise ? promise : xhr;
     };
   })();
   return ajax;

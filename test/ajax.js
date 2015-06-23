@@ -44,8 +44,18 @@ describe('Backbone.NativeAjax', function() {
   });
 
   describe('headers', function() {
-    it('should set headers if none passed in');
-    it('should use headers if passed in');
+    it('should set headers if none passed in', function() {
+      ajax({url: 'test', dataType: 'json'});
+
+      expect(setRequestHeader).to.have.been.calledOnce;
+      expect(setRequestHeader).to.have.been.calledWithExactly('Accept', "application/json, text/javascript, */*; q=0.01")
+    });
+
+    it('should use headers if passed in', function() {
+      ajax({url: 'test', dataType: '*', headers: {a: 1, b: 2}});
+      expect(setRequestHeader).to.have.been.calledThrice;
+      // expect(setRequestHeader.firstCall).to.have.been.calledWithExactly()
+    });
   });
 
   describe('finishing a request', function() {
@@ -109,6 +119,16 @@ describe('Backbone.NativeAjax', function() {
         expect(reject).to.have.been.calledWithExactly(xhr);
       });
     });
+  });
+
+  describe('XHR', function() {
+
+    var xhr, originalXhr;
+    beforeEach(function() {
+      var options = {url: 'test'};
+      xhr = ajax(options);
+      originalXhr = options.originalXhr;
+    });
 
     it('should expose common XHR methods and properties', function() {
       var props = ['readyState', 'status', 'statusText', 'responseText', 'responseXML'];
@@ -121,7 +141,16 @@ describe('Backbone.NativeAjax', function() {
       methods.forEach(function(method) {
         expect(method).to.be.a.function;
       });
-    });
 
+      it('should update XHR methods and properties onreadystatechange', function(done) {
+        expect(xhr.status).to.equal(0);
+        expect(xhr.status).to.equal(originalXhr.status);
+
+        originalXhr.receive(200, {id: 1});
+
+        expect(xhr.status).to.equal(200);
+        expect(xhr.status).to.equal(originalXhr.status);
+      });
+    });
   });
 });
