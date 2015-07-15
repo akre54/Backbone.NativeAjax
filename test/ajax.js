@@ -56,6 +56,13 @@ describe('Backbone.NativeAjax', function() {
       expect(setRequestHeader).to.have.been.calledThrice;
       // expect(setRequestHeader.firstCall).to.have.been.calledWithExactly()
     });
+
+    it('should use custom accept header if passed in', function() {
+      ajax({url: 'test', dataType: 'json', headers: {Accept: 'application/xml, application/json;q=0.9'}});
+
+      expect(setRequestHeader).to.have.been.calledOnce;
+      expect(setRequestHeader).to.have.been.calledWithExactly('Accept', 'application/xml, application/json;q=0.9');
+    });
   });
 
   describe('finishing a request', function() {

@@ -110,20 +110,22 @@
       xhr.onreadystatechange = end(xhr, options, promise, resolve, reject);
       xhr.open(options.type, options.url, true);
 
-      var allTypes = "*/".concat("*");
-      var xhrAccepts = {
-        "*": allTypes,
-        text: "text/plain",
-        html: "text/html",
-        xml: "application/xml, text/xml",
-        json: "application/json, text/javascript"
-      };
-      xhr.setRequestHeader(
-        "Accept",
-        options.dataType && xhrAccepts[options.dataType] ?
-          xhrAccepts[options.dataType] + (options.dataType !== "*" ? ", " + allTypes + "; q=0.01" : "" ) :
-          xhrAccepts["*"]
-      );
+      if(!(options.headers && options.headers.Accept)) {
+        var allTypes = "*/".concat("*");
+        var xhrAccepts = {
+          "*": allTypes,
+          text: "text/plain",
+          html: "text/html",
+          xml: "application/xml, text/xml",
+          json: "application/json, text/javascript"
+        };
+        xhr.setRequestHeader(
+          "Accept",
+          options.dataType && xhrAccepts[options.dataType] ?
+            xhrAccepts[options.dataType] + (options.dataType !== "*" ? ", " + allTypes + "; q=0.01" : "" ) :
+            xhrAccepts["*"]
+        );
+      }
 
       if (options.headers) for (var key in options.headers) {
         xhr.setRequestHeader(key, options.headers[key]);
