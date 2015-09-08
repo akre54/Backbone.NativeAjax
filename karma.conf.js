@@ -3,7 +3,7 @@ var DEBUG = process.env.DEBUG;
 
 module.exports = function(config) {
 
-  config.set({
+  var configuration = {
     basePath: '',
 
     // The test runner name. Change to jasmine, jest, whatever. Must load
@@ -80,6 +80,20 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: !DEBUG
-  });
+    singleRun: !DEBUG,
+
+    // See http://stackoverflow.com/a/27873086/1517919
+    customLaunchers: {
+      Chrome_travis_ci: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
+    }
+  };
+
+  if (process.env.TRAVIS){
+    configuration.browsers = ['Firefox', 'Chrome_travis_ci'];
+  }
+
+  config.set(configuration);
 };
