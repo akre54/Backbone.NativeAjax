@@ -1,7 +1,7 @@
-// Backbone.NativeAjax.js 0.4.1
+// Backbone.NativeAjax.js 0.4.3
 // ---------------
 
-//     (c) 2014 Adam Krebs, Paul Miller, Exoskeleton Project
+//     (c) 2015 Adam Krebs, Paul Miller, Exoskeleton Project
 //     Backbone.NativeAjax may be freely distributed under the MIT license.
 //     For all details and documentation:
 //     https://github.com/akre54/Backbone.NativeAjax
