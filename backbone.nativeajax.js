@@ -98,7 +98,11 @@
             '=' + encodeURIComponent(value);
         };
         for (var key in options.data) {
-          query += stringifyKeyValuePair(key, options.data[key]);
+          var value = options.data[key];
+          var values = Array.isArray(value) ? value : [value];
+          for (var i=0; i < values.length; i++) {
+            query += stringifyKeyValuePair(key, values[i]);
+          }
         }
 
         if (query) {
