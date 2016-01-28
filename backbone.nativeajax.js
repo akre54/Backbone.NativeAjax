@@ -7,10 +7,14 @@
 //     https://github.com/akre54/Backbone.NativeAjax
 
 (function (factory) {
-  if (typeof define === 'function' && define.amd) { define(factory);
-  } else if (typeof exports === 'object') { module.exports = factory();
-  } else { Backbone.ajax = factory(); }
-}(function() {
+  if (typeof define === 'function' && define.amd) { 
+    define(factory.bind(this, this.XMLHttpRequest));
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require('xmlhttprequest').XMLHttpRequest);
+  } else {
+    Backbone.ajax = factory(XMLHttpRequest);
+  }
+}(function(XMLHttpRequest) {
   // Make an AJAX request to the server.
   // Usage:
   //   var req = Backbone.ajax({url: 'url', type: 'PATCH', data: 'data'});
