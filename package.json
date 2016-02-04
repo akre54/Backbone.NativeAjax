@@ -20,6 +20,10 @@
     "release-minor": "git checkout master && npm version minor -m 'Backbone.NativeAjax %s' && git push origin master --tags && npm publish",
     "release-major": "git checkout master && npm version major -m 'Backbone.NativeAjax %s' && git push origin master --tags && npm publish"
   },
+  "registry": "npm",
+  "dependencies": {
+    "xmlhttprequest": "*"
+  },
   "devDependencies": {
     "backbone": "1.2.1",
     "chai": "^3.0.0",
