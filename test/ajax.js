@@ -41,6 +41,12 @@ describe('Backbone.NativeAjax', function() {
       expect(open).to.have.been.calledOnce;
       expect(open).to.have.been.calledWithExactly('GET', 'test?a=1&b=2', true);
     });
+    it('should handle multiple values for a GET parameter', function() {
+      ajax({url: 'test', dataType: 'json', data: {a: [1, 2]}});
+
+      expect(open).to.have.been.calledOnce;
+      expect(open).to.have.been.calledWithExactly('GET', 'test?a=1&a=2', true);
+    })
   });
 
   describe('headers', function() {

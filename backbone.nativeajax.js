@@ -7,10 +7,14 @@
 //     https://github.com/akre54/Backbone.NativeAjax
 
 (function (factory) {
-  if (typeof define === 'function' && define.amd) { define(factory);
-  } else if (typeof exports === 'object') { module.exports = factory();
-  } else { Backbone.ajax = factory(); }
-}(function() {
+  if (typeof define === 'function' && define.amd) { 
+    define(factory.bind(this, this.XMLHttpRequest));
+  } else if (typeof exports === 'object') {
+    module.exports = factory(require('xmlhttprequest').XMLHttpRequest);
+  } else {
+    Backbone.ajax = factory(XMLHttpRequest);
+  }
+}(function(XMLHttpRequest) {
   // Make an AJAX request to the server.
   // Usage:
   //   var req = Backbone.ajax({url: 'url', type: 'PATCH', data: 'data'});
@@ -33,7 +37,7 @@
     var isValid = function(xhr) {
       return (xhr.status >= 200 && xhr.status < 300) ||
         (xhr.status === 304) ||
-        (xhr.status === 0 && window.location.protocol === 'file:')
+        (xhr.status === 0 && typeof window !== "undefined" && window.location.protocol === 'file:')
     };
 
     var end = function(xhr, options, promise, resolve, reject) {
@@ -98,7 +102,11 @@
             '=' + encodeURIComponent(value);
         };
         for (var key in options.data) {
-          query += stringifyKeyValuePair(key, options.data[key]);
+          var value = options.data[key];
+          var values = Array.isArray(value) ? value : [value];
+          for (var i=0; i < values.length; i++) {
+            query += stringifyKeyValuePair(key, values[i]);
+          }
         }
 
         if (query) {
