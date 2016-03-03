@@ -108,7 +108,7 @@
       }
 
       xhr.onreadystatechange = end(xhr, options, promise, resolve, reject);
-      xhr.open(options.type, options.url, true);
+      xhr.open(options.type, options.url, options.async !== false);
 
       if(!(options.headers && options.headers.Accept)) {
         var allTypes = "*/".concat("*");
