@@ -18,6 +18,7 @@
   var ajax = (function() {
     var xmlRe = /^(?:application|text)\/xml/;
     var jsonRe = /^application\/json/;
+    var noop = function() {};
 
     var getData = function(accepts, xhr) {
       if (accepts == null) accepts = xhr.getResponseHeader('content-type');
@@ -44,16 +45,33 @@
 
         var status = xhr.status;
         var data = getData(options.headers && options.headers.Accept, xhr);
+        var aCallbackFailed = false;
+        var reason;
 
         // Check for validity.
         if (isValid(xhr)) {
-          if (options.success) options.success(data);
-          if (resolve) resolve(data);
+          try {
+            options.success && options.success(data);
+          } catch(e) {
+            reason = e;
+            aCallbackFailed = true;
+          }
         } else {
           var error = new Error('Server responded with a status of ' + status);
-          if (options.error) options.error(xhr, status, error);
-          if (reject) reject(xhr);
+          try {
+            options.error && options.error(xhr, status, error);
+          } catch(e) {
+            reason = e;
+            aCallbackFailed = true;
+          }
         }
+
+        if (anyHandlerFailed) {
+          if (reject) reject(reason || xhr);
+          return;
+        }
+
+        if (resolve) resolve(data);
       }
     };
 
