@@ -1,5 +1,6 @@
-var chai  = require('chai'),
-    sinon  = require('sinon');
+var chai    = require('chai'),
+    sinon   = require('sinon'),
+    Promise = require('native-promise-only');
 
 chai.use(require('sinon-chai'));
 
@@ -96,15 +97,6 @@ describe('Backbone.NativeAjax', function() {
   });
 
   describe('Promise', function() {
-    var Promise, resolve, reject;
-    beforeEach(function() {
-      Promise = function(cb) {
-        cb(resolve, reject);
-      };
-      resolve = sinon.mock();
-      reject = sinon.mock();
-    });
-
     afterEach(function() {
       delete root.Promise;
       delete ajax.Promise;
@@ -125,31 +117,38 @@ describe('Backbone.NativeAjax', function() {
 
     describe('with a Promise set', function() {
 
-      var xhr;
+      var xhr, req;
       beforeEach(function() {
         ajax.Promise = Promise;
         var options = {url: 'test'};
-        ajax(options);
+        req = ajax(options);
         xhr = options.originalXhr;
       });
 
-      it('should resolve the deferred on complete', function() {
+      it('should resolve the deferred on complete', function(done) {
+        req.then(function(resp) {
+          expect(resp).to.deep.equal({id: 1});
+          done()
+        }).catch(function(err) {
+          throw new Error('Should not have been called');
+        });
+
         // specific to mock-xhr
         xhr.receive(200, {id: 1});
-
-        expect(reject).not.to.have.been.called;
-        expect(resolve).to.have.been.calledOnce;
-        expect(resolve).to.have.been.calledWithExactly({id: 1});
       });
 
-      it('should reject the deferred on error', function() {
+      it('should reject the deferred on error', function(done) {
+        req.then(function() {
+          throw new Error('Should not have been called');
+        }).catch(function(err) {
+          expect(err).to.equal(xhr);
+          done();
+        })
+
         // specific to mock-xhr
         xhr.err();
-
-        expect(resolve).not.to.have.been.called;
-        expect(reject).to.have.been.calledOnce;
-        expect(reject).to.have.been.calledWithExactly(xhr);
       });
+
     });
   });
 
