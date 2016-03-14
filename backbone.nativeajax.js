@@ -38,7 +38,7 @@
 
     var end = function(xhr, options, promise, resolve, reject) {
       return function() {
-        updatePromise(xhr, promise);
+        proxyPromise(xhr, promise);
 
         if (xhr.readyState !== 4) return;
 
@@ -57,7 +57,7 @@
       }
     };
 
-    var updatePromise = function(xhr, promise) {
+    var proxyPromise = function(xhr, promise) {
       if (!promise) return;
 
       var props = ['readyState', 'status', 'statusText', 'responseText',
@@ -135,7 +135,7 @@
 
       options.originalXhr = xhr;
 
-      updatePromise(xhr, promise);
+      proxyPromise(xhr, promise);
 
       return promise ? promise : xhr;
     };
