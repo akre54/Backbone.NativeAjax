@@ -45,14 +45,18 @@
         var status = xhr.status;
         var data = getData(options.headers && options.headers.Accept, xhr);
 
-        // Check for validity.
-        if (isValid(xhr)) {
-          if (options.success) options.success(data);
-          if (resolve) resolve(data);
-        } else {
-          var error = new Error('Server responded with a status of ' + status);
-          if (options.error) options.error(xhr, status, error);
-          if (reject) reject(xhr);
+        try {
+          // Check for validity.
+          if (isValid(xhr)) {
+            if (options.success) options.success(data);
+            if (resolve) resolve(data);
+          } else {
+            var error = new Error('Server responded with a status of ' + status);
+            if (options.error) options.error(xhr, status, error);
+            if (reject) reject(xhr);
+          }
+        } catch (e) {
+          reject(e);
         }
       }
     };

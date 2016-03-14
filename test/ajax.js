@@ -150,6 +150,47 @@ describe('Backbone.NativeAjax', function() {
       });
 
     });
+
+    describe('when success/error callbacks throw errors', function() {
+      var reason;
+
+      beforeEach(function() {
+        ajax.Promise = Promise;
+        reason = new Error();
+      });
+
+      it('should reject the deferred if success callback throws error', function(/* done */) {
+        var success = sinon.stub().throws(reason), error = sinon.mock();
+        var options = {url: 'test', success: success, error: error};
+
+        ajax(options).then(function() {
+          throw new Error('Should not have been called');
+        }).catch(function(e) {
+          // e.should.equal(req);
+          // console.log("ERR CAUGHT", e);
+          // done();
+        });
+
+        var xhr = options.originalXhr;
+        xhr.receive(200, {id: 1});
+      });
+
+      it('should reject the deferred if error callback throws error', function(/* done */) {
+        var success = sinon.mock(), error = sinon.stub().throws(reason);
+        var options = {url: 'test', success: success, error: error};
+
+        ajax(options).then(function() {
+          throw new Error('Should not have been called');
+        }).catch(function(e) {
+          // e.should.equal(req);
+          // done();
+        });
+
+        var xhr = options.originalXhr;
+        xhr.err();
+      });
+
+    });
   });
 
   describe('XHR', function() {
