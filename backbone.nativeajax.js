@@ -55,9 +55,7 @@
           break;
         case 'json':
           if (xhr.responseText !== '') {
-            try {
-              data = JSON.parse(xhr.responseText);
-            } catch(e) {}
+            data = JSON.parse(xhr.responseText);
           }
           break;
       }
