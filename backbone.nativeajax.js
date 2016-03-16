@@ -16,18 +16,52 @@
   //   var req = Backbone.ajax({url: 'url', type: 'PATCH', data: 'data'});
   //   req.then(..., ...) // if Promise is set
   var ajax = (function() {
-    var xmlRe = /^(?:application|text)\/xml/;
-    var jsonRe = /^application\/json/;
+    var xmlRe = /^(?:application|text)\/xml$/;
+    var jsonRe = /^application\/json$/;
 
-    var getData = function(accepts, xhr) {
-      if (accepts == null) accepts = xhr.getResponseHeader('content-type');
-      if (xmlRe.test(accepts)) {
-        return xhr.responseXML;
-      } else if (jsonRe.test(accepts) && xhr.responseText !== '') {
-        return JSON.parse(xhr.responseText);
-      } else {
-        return xhr.responseText;
+    var parseMimeType = function(mimeType) {
+        if (xmlRe.test(mimeType)) {
+          return 'xml';
+        } else if (jsonRe.test(mimeType)) {
+          return 'json';
+        }
+    }
+
+    var getContentType = function(options, xhr) {
+      var contentType = options.dataType;
+      if (!contentType) {
+        var contentTypeHeader = xhr.getResponseHeader('Content-type');
+        contentType = parseMimeType(contentTypeHeader);
       }
+      if (!contentType) {
+        var acceptHeader = options.headers && options.headers.Accept;
+        var accepts = acceptHeader.replace(/;[^,]*/g, '').split(/\s*,\s*/);
+        for (var i=0; i<accepts.length; i++) {
+          contentType = parseMimeType(accepts[i]);
+          if (contentType) {
+            break;
+          }
+        }
+      }
+      return contentType;
+    }
+
+    var getData = function(options, xhr) {
+      var contentType = getContentType(options, xhr);
+      var data;
+      switch (contentType) {
+        case 'xml':
+          data = xhr.responseXML;
+          break;
+        case 'json':
+          if (xhr.responseText !== '') {
+            try {
+              data = JSON.parse(xhr.responseText);
+            } catch(e) {}
+          }
+          break;
+      }
+      return data || xhr.responseText;
     };
 
     var isValid = function(xhr) {
@@ -43,7 +77,7 @@
         if (xhr.readyState !== 4) return;
 
         var status = xhr.status;
-        var data = getData(options.headers && options.headers.Accept, xhr);
+        var data = getData(options, xhr);
 
         // Check for validity.
         if (isValid(xhr)) {
