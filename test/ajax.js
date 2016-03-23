@@ -96,6 +96,71 @@ describe('Backbone.NativeAjax', function() {
     });
   });
 
+  describe('Parsing the response', function() {
+    it('should use options.dataType to determine the response type', function() {
+      var success = sinon.mock();
+
+      var options = {url: 'test', success: success, dataType: 'json'};
+      var req = ajax(options);
+      var xhr = options.originalXhr;
+
+      xhr.receive(200, '{"id": 1}');
+
+      expect(success).to.have.been.calledWithExactly({id: 1});
+    });
+
+    it('should use the content type header to determine the response type if no options.dataType is given', function() {
+      var success = sinon.mock();
+
+      var options = {url: 'test', success: success};
+      var req = ajax(options);
+      var xhr = options.originalXhr;
+      xhr.getResponseHeader = function() {
+        return 'application/json';
+      }
+
+      xhr.receive(200, '{"id": 1}');
+
+      expect(success).to.have.been.calledWithExactly({id: 1});
+    });
+
+    it('should use the accept headers to determine the response type if options.dataType and the content type header are insufficient', function() {
+      var success = sinon.mock();
+
+      var options = {
+        url: 'test',
+        success: success,
+        headers: {
+          Accept: 'application/vnd+myformat,application/json;q=0.9,*/*;q=0.1'
+        } 
+      };
+      var req = ajax(options);
+      var xhr = options.originalXhr;
+      xhr.getResponseHeader = function() {
+        return 'application/vnd+myformat';
+      }
+
+      xhr.receive(200, '{"id": 1}');
+
+      expect(success).to.have.been.calledWithExactly({id: 1});
+    });
+
+    it('should return the plain text response if it cannot determine the response type', function() {
+      var success = sinon.mock();
+
+      var options = {url: 'test', success: success};
+      var req = ajax(options);
+      var xhr = options.originalXhr;
+      xhr.getResponseHeader = function() {
+        return 'application/vnd+myformat';
+      }
+
+      xhr.receive(200, '{"id": 1}');
+
+      expect(success).to.have.been.calledWithExactly('{"id": 1}');
+    });
+  });
+
   describe('Promise', function() {
     afterEach(function() {
       delete root.Promise;
