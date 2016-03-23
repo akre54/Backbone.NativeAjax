@@ -35,11 +35,13 @@
       }
       if (!contentType) {
         var acceptHeader = options.headers && options.headers.Accept;
-        var accepts = acceptHeader.replace(/;[^,]*/g, '').split(/\s*,\s*/);
-        for (var i=0; i<accepts.length; i++) {
-          contentType = parseMimeType(accepts[i]);
-          if (contentType) {
-            break;
+        if (acceptHeader) {
+          var accepts = acceptHeader.replace(/;[^,]*/g, '').split(/\s*,\s*/);
+          for (var i=0; i<accepts.length; i++) {
+            contentType = parseMimeType(accepts[i]);
+            if (contentType) {
+              break;
+            }
           }
         }
       }
