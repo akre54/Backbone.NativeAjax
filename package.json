@@ -4,7 +4,7 @@
   "author": "Adam Krebs <amk528@cs.nyu.edu>",
   "description": "A Backbone.Ajax function powered by native XHR methods",
   "license": "MIT",
-  "main": "backbone.nativeajax",
+  "main": "backbone.nativeajax.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/akre54/backbone.nativeajax"
