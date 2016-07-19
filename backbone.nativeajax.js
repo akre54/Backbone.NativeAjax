@@ -66,9 +66,13 @@
 
       for (var i = 0; i < props.length; i++) {
         var prop = props[i];
-        promise[prop] = typeof xhr[prop] === 'function' ?
-                              xhr[prop].bind(xhr) :
-                              xhr[prop];
+        try {
+          promise[prop] = typeof xhr[prop] === 'function' ?
+                                xhr[prop].bind(xhr) :
+                                xhr[prop];
+        } catch (e) {
+          console.log(e);
+        }
       }
       return promise;
     }
